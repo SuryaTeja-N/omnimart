@@ -1,6 +1,6 @@
 import React from "react";
 
-const SignUp = ()=>{
+const SignIn = ()=>{
     
     const [emailVal,setEmailVal] = React.useState("")
     const[passVal,setPassVal] = React.useState("")
@@ -14,10 +14,10 @@ const SignUp = ()=>{
         setPassVal(event.target.value)
     }
 
-    const signUp = async ()=>{
+    const signIn = async ()=>{
         const userDetails = {"email":emailVal,"password":passVal}
         console.log(userDetails)
-        const response = await fetch("http://localhost:3000/signUpUser", {
+        const response = await fetch("http://localhost:3000/signInUser", {
             method: "POST",
             body: JSON.stringify(userDetails),
             headers: {
@@ -35,8 +35,8 @@ const SignUp = ()=>{
             setError(null)
             setEmailVal("")
             setPassVal("")
-            console.log("User signed up")
-            alert("User Signed up")
+            console.log("User signed in")
+            alert("User Signed in")
         }
 
     }
@@ -54,10 +54,10 @@ const SignUp = ()=>{
             </div>
 
             <div>
-                <button type="button" onClick={signUp}> Sign Up </button>
+                <button type="button" onClick={signIn}> Sign In </button>
             </div>
         </div>
     )
 }
 
-export default SignUp
+export default SignIn

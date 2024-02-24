@@ -52,13 +52,46 @@ userSchema.statics.signup = async function(email,password){
     const hash = await bcrypt.hash(password,salt)
 
     const user = await this.create({email,password:hash})
+
     return user
 
 }
 
-// First value will be collection name and second value will be the schema name created above
+//Static method for signin
+// Anywhere "this" is used, it is referring to the usermodel
+// We cannot use arrow function if we are using "this", we need to use regular function
+
+userSchema.statics.signin = async function(email,password){
+    //validation
+    if(!email || !password){
+        throw Error("All fields must be filled")
+    }
+
+    const user = await this.findOne({email})
+    if (!user){
+        throw Error('Incorrect email')
+    }
+
+    // this compares the normal text password user has provided right now with the hashed password
+    // fetched from DB. Internally it performs the encryption and decryption and performs the validation
+    const match = await bcrypt.compare(password,user.password)
+    if(!match){
+        throw Error("Incorrect credentials")
+    }
+
+    return user
+}
+
+
+// First argument will be singular name of the collection your model is for. Mongoose automatically looks for the plural, lowercased version of your model name and 
+
+// second value will be the schema name created above
 // If we did not have the collection with this name, then it will create a collection in DB when first document is saved, if 
-// already exists then it will not be created again 
+// already exists then it will not be created again.
+
+// Third argument is override for collection name. In our case itself, we can see our collection name is "userDetails", if we give this in our first argument, it tries to
+// look at "userdetailss" since it looks for lower case plural form to whatever we give in first argument. So it fails to find that collection. Instead here we can give the
+// actual collection name in last argument and it searches for that directly
 const userModel = mongoose.model("userDetails",userSchema,"userDetails")
 
 // So that we can export this model and we will be able access this model and perform changes to our table/collection 
